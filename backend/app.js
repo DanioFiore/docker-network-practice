@@ -83,9 +83,9 @@ app.delete('/goals/:id', async (req, res) => {
   }
 });
 
-// if the BE is not dockerized, we havo to expose the mongo container to the port (docker run --name mongodb --rm -d -p 27017:27017 mongo)
+// if the BE is not dockerized, we havo to expose the mongo container to the port (docker run --name mongodb --rm -d -p 27017:27017 mongo and leave it here mongodb://host.docker.internal:27017/course-goals)
 mongoose.connect(
-  'mongodb://localhost:27017/course-goals',
+  'mongodb://mongodb:27017/course-goals',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
