@@ -83,6 +83,7 @@ app.delete('/goals/:id', async (req, res) => {
   }
 });
 
+// if the BE is not dockerized, we havo to expose the mongo container to the port (docker run --name mongodb --rm -d -p 27017:27017 mongo)
 mongoose.connect(
   'mongodb://localhost:27017/course-goals',
   {
