@@ -84,18 +84,25 @@ app.delete('/goals/:id', async (req, res) => {
 });
 
 // if the BE is not dockerized, we havo to expose the mongo container to the port (docker run --name mongodb --rm -d -p 27017:27017 mongo and leave it here mongodb://host.docker.internal:27017/course-goals)
+
+// To make a bind mount and make the db data persist when the container is removed, go to the mongodb image docs, and we see that inside the container, mongodb save datas into /data/db, so we create a named volume with it: docker run --name mongodb -v data:/data/db --rm -d --network goals-net mongo
+
+// AUTH
+// mongodb has 2 env variables MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_USERNAME, so we have to put it in the -e: docker run --name mongodb -v data:/data/db -e MONGO_INITDB_ROOT_USERNAME=danio -e MONGO_INITDB_ROOT_PASSWORD=secret --rm -d --network goals-net mongo and pass it in the mongo connection, also add ?authSource=admin at the end
+
+
 mongoose.connect(
-  'mongodb://mongodb:27017/course-goals',
+  'mongodb://danio:secret@mongodb:27017/course-goals?authSource=admin',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   },
   (err) => {
     if (err) {
-      console.error('FAILED TO CONNECT TO MONGODB');
+      console.error("FAILED TO CONNECT TO MONGODB");
       console.error(err);
     } else {
-      console.log('CONNECTED TO MONGODB');
+      console.log("CONNECTED TO MONGODB");
       app.listen(95);
     }
   }
